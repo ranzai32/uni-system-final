@@ -1,7 +1,6 @@
 package UniversitySystem;
 
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -78,9 +77,9 @@ public class Admin extends User {
 		} else if (user instanceof Admin) {
 			db.addAdmin((Admin) user);
 //		} else if (user instanceof Manager) {
-//			db.addManager((Manager) user); // Предполагается, что метод addManager реализован
+//			db.addManager((Manager) user); //
 //		} else if (user instanceof Dean) {
-//			db.addDean((Dean) user); // Предполагается, что метод addDean реализован
+//			db.addDean((Dean) user); //
 		} else {
 			System.out.println("Неизвестный тип пользователя.");
 		}
@@ -97,8 +96,8 @@ public class Admin extends User {
 		if (db.removeStudent(userId)) return true;
 		if (db.removeTeacher(userId)) return true;
 		if (db.removeAdmin(userId)) return true;
-//		if (db.removeManager(userId)) return true; // Предполагается, что метод removeManager реализован
-//		if (db.removeDean(userId)) return true; // Предполагается, что метод removeDean реализован
+//		if (db.removeManager(userId)) return true; //
+//		if (db.removeDean(userId)) return true; //
 		System.out.println("Пользователь с ID " + userId + " не найден.");
 		return false;
 	}
@@ -117,9 +116,9 @@ public class Admin extends User {
 		if (user != null) return user;
 		user = db.findAdminById(userId);
 		if (user != null) return user;
-//		user = db.findManagerById(userId); // Предполагается, что метод findManagerById реализован
+//		user = db.findManagerById(userId); //
 //		if (user != null) return user;
-//		user = db.findDeanById(userId); // Предполагается, что метод findDeanById реализован
+//		user = db.findDeanById(userId); //
 		return user;
 	}
 

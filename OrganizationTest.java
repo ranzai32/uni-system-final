@@ -35,7 +35,7 @@ public class OrganizationTest {
         Student student2 = new Student(
                 "S002",
                 "password456",
-                "Алексей",
+                "Алекс",
                 "Смирнов",
                 21,
                 false,
@@ -78,7 +78,7 @@ public class OrganizationTest {
         // Создание курсов
         Course course1 = new Course(
                 "CS101",
-                "Введение в информатику",
+                "Введение в программирование",
                 3,
                 TypeCourse.Required,
                 Faculty.FIT,
