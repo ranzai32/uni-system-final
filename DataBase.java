@@ -1,5 +1,12 @@
 package UniversitySystem;
 
+
+import UniversitySystem.decorators.ResearcherDecorator;
+import UniversitySystem.entities.*;
+
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -19,9 +26,9 @@ public class DataBase {
 	// Хранилища различных типов пользователей и объектов
 	private final List<Student> allStudents;
 	private final List<Teacher> allTeachers;
-//	private final List<Manager> allManagers;
+	//    private final List<Manager> allManagers;
 	private final List<Admin> allAdmins;
-//	private final List<Dean> allDeans;
+	//    private final List<Dean> allDeans;
 	private final List<Organization> allOrganizations;
 	private final List<ResearcherDecorator> allResearchers;
 	private final List<Course> allCourses;
@@ -30,9 +37,9 @@ public class DataBase {
 	private DataBase() {
 		allStudents = new CopyOnWriteArrayList<>();
 		allTeachers = new CopyOnWriteArrayList<>();
-//		allManagers = new CopyOnWriteArrayList<>();
+//        allManagers = new CopyOnWriteArrayList<>();
 		allAdmins = new CopyOnWriteArrayList<>();
-//		allDeans = new CopyOnWriteArrayList<>();
+//        allDeans = new CopyOnWriteArrayList<>();
 		allOrganizations = new CopyOnWriteArrayList<>();
 		allResearchers = new CopyOnWriteArrayList<>();
 		allCourses = new CopyOnWriteArrayList<>();
@@ -161,43 +168,43 @@ public class DataBase {
 
 	// Методы для работы с менеджерами
 
-//	public List<Manager> getAllManagers() {
-//		return Collections.unmodifiableList(allManagers);
-//	}
+//    public List<Manager> getAllManagers() {
+//        return Collections.unmodifiableList(allManagers);
+//    }
 
-//	public boolean addManager(Manager manager) {
-//		if (manager == null) {
-//			logger.warning("Попытка добавить null менеджера.");
-//			return false;
-//		}
-//		if (allManagers.contains(manager)) {
-//			logger.warning("Менеджер с ID " + manager.getId() + " уже существует.");
-//			return false;
-//		}
-//		allManagers.add(manager);
-//		logger.info("Менеджер " + manager.getId() + " добавлен в базу данных.");
-//		return true;
-//	}
+//    public boolean addManager(Manager manager) {
+//        if (manager == null) {
+//            logger.warning("Попытка добавить null менеджера.");
+//            return false;
+//        }
+//        if (allManagers.contains(manager)) {
+//            logger.warning("Менеджер с ID " + manager.getId() + " уже существует.");
+//            return false;
+//        }
+//        allManagers.add(manager);
+//        logger.info("Менеджер " + manager.getId() + " добавлен в базу данных.");
+//        return true;
+//    }
 
-//	public boolean removeManager(String managerId) {
-//		Manager manager = findManagerById(managerId);
-//		if (manager != null) {
-//			allManagers.remove(manager);
-//			logger.info("Менеджер " + managerId + " удален из базы данных.");
-//			return true;
-//		}
-//		logger.warning("Менеджер " + managerId + " не найден.");
-//		return false;
-//	}
+//    public boolean removeManager(String managerId) {
+//        Manager manager = findManagerById(managerId);
+//        if (manager != null) {
+//            allManagers.remove(manager);
+//            logger.info("Менеджер " + managerId + " удален из базы данных.");
+//            return true;
+//        }
+//        logger.warning("Менеджер " + managerId + " не найден.");
+//        return false;
+//    }
 
-//	public Manager findManagerById(String managerId) {
-//		for (Manager m : allManagers) {
-//			if (m.getId().equalsIgnoreCase(managerId)) {
-//				return m;
-//			}
-//		}
-//		return null;
-//	}
+//    public Manager findManagerById(String managerId) {
+//        for (Manager m : allManagers) {
+//            if (m.getId().equalsIgnoreCase(managerId)) {
+//                return m;
+//            }
+//        }
+//        return null;
+//    }
 
 	// Методы для работы с администраторами
 
@@ -248,7 +255,6 @@ public class DataBase {
 
 
 
-
 	// Методы для работы с курсами
 
 	public List<Course> getAllCourses() {
@@ -291,43 +297,43 @@ public class DataBase {
 
 	// Методы для работы с деканами
 
-//	public List<Dean> getAllDeans() {
-//		return Collections.unmodifiableList(allDeans);
-//	}
+//    public List<Dean> getAllDeans() {
+//        return Collections.unmodifiableList(allDeans);
+//    }
 
-//	public boolean addDean(Dean dean) {
-//		if (dean == null) {
-//			logger.warning("Попытка добавить null декана.");
-//			return false;
-//		}
-//		if (allDeans.contains(dean)) {
-//			logger.warning("Декан с ID " + dean.getId() + " уже существует.");
-//			return false;
-//		}
-//		allDeans.add(dean);
-//		logger.info("Декан " + dean.getId() + " добавлен в базу данных.");
-//		return true;
-//	}
+//    public boolean addDean(Dean dean) {
+//        if (dean == null) {
+//            logger.warning("Попытка добавить null декана.");
+//            return false;
+//        }
+//        if (allDeans.contains(dean)) {
+//            logger.warning("Декан с ID " + dean.getId() + " уже существует.");
+//            return false;
+//        }
+//        allDeans.add(dean);
+//        logger.info("Декан " + dean.getId() + " добавлен в базу данных.");
+//        return true;
+//    }
 
-//	public boolean removeDean(String deanId) {
-//		Dean dean = findDeanById(deanId);
-//		if (dean != null) {
-//			allDeans.remove(dean);
-//			logger.info("Декан " + deanId + " удален из базы данных.");
-//			return true;
-//		}
-//		logger.warning("Декан " + deanId + " не найден.");
-//		return false;
-//	}
+//    public boolean removeDean(String deanId) {
+//        Dean dean = findDeanById(deanId);
+//        if (dean != null) {
+//            allDeans.remove(dean);
+//            logger.info("Декан " + deanId + " удален из базы данных.");
+//            return true;
+//        }
+//        logger.warning("Декан " + deanId + " не найден.");
+//        return false;
+//    }
 //
-//	public Dean findDeanById(String deanId) {
-//		for (Dean d : allDeans) {
-//			if (d.getId().equalsIgnoreCase(deanId)) {
-//				return d;
-//			}
-//		}
-//		return null;
-//	}
+//    public Dean findDeanById(String deanId) {
+//        for (Dean d : allDeans) {
+//            if (d.getId().equalsIgnoreCase(deanId)) {
+//                return d;
+//            }
+//        }
+//        return null;
+//    }
 
 	// Методы для работы с организациями
 
@@ -368,6 +374,55 @@ public class DataBase {
 		}
 		return null;
 	}
+
+//	// Пример сохранения данных в JSON
+//	public void saveDataToJson(String filePath) {
+//		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//		try (FileWriter writer = new FileWriter(filePath)) {
+//			gson.toJson(this, writer);
+//			logger.info("Данные успешно сохранены в JSON файл: " + filePath);
+//		} catch (IOException e) {
+//			logger.severe("Ошибка при сохранении данных в JSON файл: " + e.getMessage());
+//		}
+//	}
+
+    public void saveDataToTxt(String filePath) {
+        try (FileWriter writer = new FileWriter(filePath)) {
+            writer.write("Список студентов:\n");
+            for (Student student : allStudents) {
+                writer.write(student.toString() + "\n");
+            }
+
+            writer.write("\nСписок преподавателей:\n");
+            for (Teacher teacher : allTeachers) {
+                writer.write(teacher.toString() + "\n");
+            }
+
+            writer.write("\nСписок администраторов:\n");
+            for (Admin admin : allAdmins) {
+                writer.write(admin.toString() + "\n");
+            }
+
+            writer.write("\nСписок организаций:\n");
+            for (Organization organization : allOrganizations) {
+                writer.write(organization.toString() + "\n");
+            }
+
+            writer.write("\nСписок курсов:\n");
+            for (Course course : allCourses) {
+                writer.write(course.toString() + "\n");
+            }
+
+            writer.write("\nСписок исследователей:\n");
+            for (ResearcherDecorator researcher : allResearchers) {
+                writer.write(researcher.toString() + "\n");
+            }
+
+            logger.info("Данные успешно сохранены в текстовый файл: " + filePath);
+        } catch (IOException e) {
+            logger.severe("Ошибка при записи данных в текстовый файл: " + e.getMessage());
+        }
+    }
 }
 
 
