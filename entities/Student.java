@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static UniversitySystem.DataBase.logger;
+
 /**
  * Класс Student представляет студента в системе.
  */
@@ -233,26 +235,6 @@ public class Student extends User {
 			throw new IllegalArgumentException("Организация не может быть null.");
 		}
 		this.organization = organization;
-	}
-
-	// Методы для управления курсами
-
-	/**
-	 * Добавляет курс студенту.
-	 *
-	 * @param course Курс для добавления.
-	 * @return true, если курс успешно добавлен, иначе false.
-	 */
-	public boolean addCourse(Course course) {
-		if (course == null) {
-			throw new IllegalArgumentException("Курс не может быть null.");
-		}
-		if (courses.contains(course)) {
-			return false; // Курс уже назначен
-		}
-		courses.add(course);
-		Admin.getInstance().addLog("Студент " + this.getId() + " добавил курс: " + course.getCourseName());
-		return true;
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package UniversitySystem.entities;
 
-import UniversitySystem.TypeSemester;
+import UniversitySystem.enums.TypeSemester;
 
 import java.util.HashMap;
 

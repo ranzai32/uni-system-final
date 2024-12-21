@@ -7,6 +7,7 @@ import UniversitySystem.entities.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -18,20 +19,23 @@ import java.util.logging.Logger;
  */
 public class DataBase {
 
-	private static final Logger logger = Logger.getLogger(DataBase.class.getName());
+	public static final Logger logger = Logger.getLogger(DataBase.class.getName());
 
 	// Единственный экземпляр DataBase
 	private static volatile DataBase instance = null;
 
 	// Хранилища различных типов пользователей и объектов
-	private final List<Student> allStudents;
+//	private final List<Student> allStudents;
 	private final List<Teacher> allTeachers;
 	//    private final List<Manager> allManagers;
 	private final List<Admin> allAdmins;
 	//    private final List<Dean> allDeans;
 	private final List<Organization> allOrganizations;
 	private final List<ResearcherDecorator> allResearchers;
-	private final List<Course> allCourses;
+//	private final List<Course> allCourses;
+	private final List<RegistrationRequest> registrationRequests = new ArrayList<>();
+	private List<Student> allStudents = new ArrayList<>();
+	private List<Course> allCourses = new ArrayList<>();
 
 	// Приватный конструктор для предотвращения создания экземпляров извне
 	private DataBase() {
@@ -124,6 +128,25 @@ public class DataBase {
 			}
 		}
 		return null;
+	}
+
+	public boolean submitRegistrationRequest(String studentId, String courseCode) {
+		Student student = findStudentById(studentId);
+		Course course = findCourseByCode(courseCode);
+
+		if (student == null) {
+			logger.warning("Студент с ID " + studentId + " не найден.");
+			return false;
+		}
+		if (course == null) {
+			logger.warning("Курс с кодом " + courseCode + " не найден.");
+			return false;
+		}
+
+		RegistrationRequest request = new RegistrationRequest(student, course);
+		registrationRequests.add(request); // Добавление заявки в список
+		logger.info("Заявка на регистрацию студента " + studentId + " на курс " + courseCode + " отправлена.");
+		return true;
 	}
 
 	// Методы для работы с преподавателями
