@@ -61,7 +61,7 @@ public class OrganizationTest {
         // Создание преподавателей
         Teacher teacher1 = new Teacher(
                 "T001",
-                null,
+                new ArrayList<>(), // Пустой список сообщений
                 false, // isResearcher
                 true,  // status (активен)
                 45,    // age
@@ -69,10 +69,10 @@ public class OrganizationTest {
                 "Иван",
                 "teachPass1",
                 LocalDate.of(2010, 9, 1),
-                null,
+                new ArrayList<>(), // Пустой список заказов
                 TypeTeacher.Tutor,
                 4.5,    // rate
-                null,
+                new HashMap<>(), // Пустое расписание
                 Faculty.FIT
         );
 
