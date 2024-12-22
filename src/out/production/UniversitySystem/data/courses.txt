@@ -1,0 +1,1 @@
+Course{courseCode='CS101', name='Программирование', credits=5, type=Required, faculty=FIT, lessons=0, maxStudentNumber=50, teachers=0}

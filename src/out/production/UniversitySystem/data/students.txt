@@ -1,0 +1,1 @@
+Student{degree=Bachelor, faculty=FIT, year=2, gpa=0.0, courses=[Course{courseCode='CS101', name='Программирование', credits=5, type=Required, faculty=FIT, lessons=0, maxStudentNumber=50, teachers=0}], transcript=null, graduationDate=2025-06-30, lessons=[], complaints={}, organization=null}

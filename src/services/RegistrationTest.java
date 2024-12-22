@@ -43,6 +43,8 @@ public class RegistrationTest {
         for (Course c : student.getCourses()) {
             System.out.println("- " + c.getCourseName() + " (" + c.getCourseCode() + ")");
         }
+
+        db.saveAllListsToFiles();
     }
 }
 
