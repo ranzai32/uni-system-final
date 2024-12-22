@@ -3,6 +3,8 @@ package entities;
 import common.*;
 import enums.*;
 import users.*;
+import decorators.*;
+import exceptions.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class Student extends User {
 	private Degree degree;
 	private Faculty faculty;
 	private int year;
+	private ResearcherDecorator supervisor;
 	private double gpa;
 	private List<Course> courses;
 	private Transcript transcript;
@@ -69,6 +72,20 @@ public class Student extends User {
 		this.CreditsForSemester = 30;
 	}
 
+	
+	public void assignSupervisor(ResearcherDecorator supervisor) throws InvalidSupervisorException, InvalidStudentYearException {
+	    if (this.year != 4) {
+	        throw new InvalidStudentYearException("Only 4th-year students can have a supervisor.");
+	    }
+	    if (supervisor.getHIndex() < 3) {
+	        throw new InvalidSupervisorException("Supervisor's h-index is less than 3. Cannot assign as research supervisor.");
+	    }
+	    this.supervisor = supervisor;
+	    System.out.println("Supervisor assigned successfully: " + supervisor.getUser().getFullName());
+	}
+
+
+	
 	// Геттеры и сеттеры
 
 	public Degree getDegree() {
