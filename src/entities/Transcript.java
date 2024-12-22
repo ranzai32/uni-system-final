@@ -1,7 +1,9 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Transcript {
 
@@ -74,6 +76,21 @@ public class Transcript {
 		return totalCredits == 0 ? 0.0 : gpaSum / totalCredits; // Средний GPA с учетом кредитов
 	}
 
+	public double calculateGPAForStudent(String studentId) {
+		double gpaSum = 0.0;
+		int totalCreditsForStudent = 0;
+
+		for (TranscriptEntry entry : entries) {
+			if (entry.getStudentId().equals(studentId)) {
+				double normalizedScore = (entry.getTotalScore() / 100.0) * 4.0; // Перевод в шкалу GPA
+				gpaSum += normalizedScore * entry.getCourseCredits(); // Умножаем на кредиты
+				totalCreditsForStudent += entry.getCourseCredits();
+			}
+		}
+
+		return totalCreditsForStudent == 0 ? 0.0 : gpaSum / totalCreditsForStudent;
+	}
+
 
 	// Печать транскрипт
 	public void printTranscript() {
@@ -83,9 +100,29 @@ public class Transcript {
 			return;
 		}
 
+		// Собираем уникальные studentId из записей
+		Set<String> studentIds = new HashSet<>();
 		for (TranscriptEntry entry : entries) {
-			System.out.println(entry);
+			studentIds.add(entry.getStudentId());
 		}
-		System.out.println("Total GPA: " + totalGPA);
+
+		// Для каждого студента выводим его записи и GPA
+		for (String studentId : studentIds) {
+			System.out.println("Student ID: " + studentId);
+
+			for (TranscriptEntry entry : entries) {
+				if (entry.getStudentId().equals(studentId)) {
+					System.out.println(entry);
+				}
+			}
+
+			double studentGPA = calculateGPAForStudent(studentId);
+			System.out.println("GPA for Student " + studentId + ": " + String.format("%.2f", studentGPA));
+			System.out.println();
+		}
+
+		// Общий GPA по всем студентам (если нужен)
+		System.out.println("Total GPA: " + String.format("%.2f", totalGPA));
 	}
 }
+
