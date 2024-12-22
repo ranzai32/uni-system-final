@@ -4,6 +4,7 @@ import common.Comment;
 import common.Message;
 import common.News;
 import common.Order;
+import database.DataBase;
 import entities.Admin;
 import enums.OrderStatus;
 
@@ -237,7 +238,7 @@ public abstract class User {
 	 * Просматривает все новости.
 	 */
 	public void viewNews() {
-		Vector<News> allNews = News.getAllNews();
+		Vector<News> allNews = DataBase.getInstance().getAllNews();
 		if (allNews.isEmpty()) {
 			System.out.println("Нет новостей.");
 		} else {

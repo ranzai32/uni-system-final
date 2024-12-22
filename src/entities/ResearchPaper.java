@@ -9,21 +9,22 @@ import java.util.Objects;
 public class ResearchPaper {
 
 	private String title;
-
 	private int pages;
-
+	private String content;
 	private Date publishedDate;
-
+	private String topic;
 	private int citations;
 
 	private Vector <ResearcherDecorator> researchers;
 
-	public ResearchPaper(String title, int citations, Date publishedDate, int pages) {
+	public ResearchPaper(String title, int citations, Date publishedDate, int pages, String content, String topic) {
 		this.title = title;
 		this.researchers = new Vector<>();
 		this.citations = citations;
 		this.publishedDate = publishedDate;
 		this.pages = pages;
+		this.content = content;
+		this.topic = topic;
 	}
 
 	@Override
@@ -59,6 +60,19 @@ public class ResearchPaper {
 		this.title = title;
 	}
 
+	public String getContent() {
+		return content;
+	}
+	
+	public void setContent(String c) {
+		this.content = c;
+	}
+	public String getTopic() {
+		return topic;
+	}
+	public void setTopis(String t) {
+		topic = t;
+	}
 	public int getPages() {
 		return pages;
 	}

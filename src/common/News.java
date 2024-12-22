@@ -1,6 +1,8 @@
 package common;
 
 import enums.Languages;
+import database.DataBase;
+import users.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -10,20 +12,24 @@ public class News {
 
 	private String title;
 	private String content;
-	private Languages language;
+	private Languages language = Languages.EN;
 	private LocalDateTime date;
 	private String topic;
-	private static Vector<News> allNews = new Vector<>();
+	private User author;
 	private Vector<Comment> comments;
 
-	public News(String title, String topic, String content, Languages language) {
+	public News(String title, String topic, String content, Languages language, User autho) {
 		this.title = title;
 		this.topic = topic;
+		this.author = author;
 		this.content = content;
 		this.language = language;
 		this.date = LocalDateTime.now();
 		this.comments = new Vector<>();
-		allNews.add(this);
+		boolean added = DataBase.getInstance().addNews(this);
+	    if (!added) {
+	        System.err.println("Ошибка при добавлении новости в базу данных: " + this.title);
+	    }
 	}
 
 	// Геттеры и сеттеры
@@ -31,7 +37,11 @@ public class News {
 	public String getTitle() {
 		return title;
 	}
-
+	
+	public User getAuthor() {
+		return author;
+	}
+	
 	public void setTitle(String title) {
 		if(title != null && !title.isEmpty()) {
 			this.title = title;
@@ -40,20 +50,6 @@ public class News {
 
 	public Vector<Comment> getComments() {
 		return comments;
-	}
-
-	public void setComments(Vector<Comment> comments) {
-		if(comments != null) {
-			this.comments = comments;
-		}
-	}
-
-	public static Vector<News> getAllNews() {
-		return allNews;
-	}
-
-	public static void setAllNews(Vector<News> allNews) {
-		News.allNews = allNews;
 	}
 
 	public String getTopic() {
@@ -70,11 +66,6 @@ public class News {
 		return date;
 	}
 
-	public void setDate(LocalDateTime date) {
-		if(date != null) {
-			this.date = date;
-		}
-	}
 
 	public Languages getLanguage() {
 		return language;

@@ -10,9 +10,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import common.News;
 
 /**
  * Класс DataBase является синглтоном и служит центральным хранилищем данных для системы университета.
@@ -23,7 +26,8 @@ public class DataBase {
 
 	// Единственный экземпляр DataBase
 	private static volatile DataBase instance = null;
-
+	
+	private final Vector<News> allNews = new Vector<>();
 	// Хранилища различных типов пользователей и объектов
 	private final List<Teacher> allTeachers;
 	//    private final List<Manager> allManagers;
@@ -392,6 +396,38 @@ public class DataBase {
 
 	public List<Organization> getAllOrganizations() {
 		return Collections.unmodifiableList(allOrganizations);
+	}
+	
+	
+	
+	public boolean addNews(News news) {
+	    if (news == null) {
+	        logger.warning("Попытка добавить null новость.");
+	        return false;
+	    }
+	    allNews.add(news);
+	    logger.info("Новость добавлена: " + news.getTitle());
+	    return true;
+	}
+	
+	
+	public boolean deleteNew(News n) {
+	    if (n == null) {
+	        logger.warning("Попытка удалить null новость.");
+	        return false;
+	    }
+	    if (allNews.contains(n)) {
+	        allNews.remove(n);
+	        logger.info("Новость удалена: " + n.getTitle());
+	        return true;
+	    } else {
+	        logger.warning("Новость не найдена: " + n.getTitle());
+	        return false;
+	    }
+	}
+	
+	public Vector<News> getAllNews(){
+		return allNews;
 	}
 
 	public boolean addOrganization(Organization organization) {

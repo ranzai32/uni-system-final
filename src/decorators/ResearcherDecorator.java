@@ -1,11 +1,16 @@
 package decorators;
 
 import enums.*;
-import users.User;
+import users.*;
 import entities.*;
+import interfaces.*;
 import java.util.*;
 
-public class ResearcherDecorator {
+import common.Comment;
+import common.News;
+import database.DataBase;
+
+public class ResearcherDecorator implements ManageNews {
 
 	private int hIndex;
 	private Vector<ResearchPaper> researchPapers;
@@ -59,6 +64,42 @@ public class ResearcherDecorator {
 	    this.hIndex = h;
 	}
 
+	public void makeNew(String title, String topic, String content, Languages language) {
+		News news = new News(title, topic, content, language, this.getUser());
+	}
+	public void makeNew(ResearchPaper p) {
+		News news = new News(p.getTitle(), p.getTopic(), p.getContent(), Languages.EN, this.getUser());
+	}
+	public void deleteNew(News n) {
+		if (n != null) {
+			if (n.getAuthor().equals(this.getUser())) {
+				DataBase.getInstance().deleteNew(n);
+				System.out.println("Новость удалена.");
+				Admin.getInstance().addLog("Пользователь " + this.getUser().getId() + " удалил новость " + n.getTitle() + ".");
+			} else {
+				System.out.println("Вы можете удалить только Вашу новость.");
+			}
+		} else {
+			System.out.println("Новость не найдена.");
+		}
+	}
+	public void deleteComment(Comment c) {
+		if (c != null) {
+			News news = c.getNews();
+			if (news != null && c.getNews().getAuthor().equals(this.getUser())) {
+				news.removeComment(c);
+				System.out.println("Комментарий удалён.");
+				Admin.getInstance().addLog("Пользователь " + this.getUser().getId() + " удалил комментарий из новости " + news.getTitle() + ".");
+			} else {
+				System.out.println("Вы можете удалить комментарии только под Вашими новостями.");
+			}
+		} else {
+			System.out.println("Новость не найдена.");
+		}
+	}
+	
+	
+	
 	public void addResearchPaper(ResearchPaper p) {
 		researchPapers.add(p);
 		this.calculateHIndex();
