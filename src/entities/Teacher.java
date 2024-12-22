@@ -122,7 +122,7 @@ public class Teacher extends Employee {
 		this.faculty = faculty;
 	}
 
-	public void addGrade(String studentId, Course course, double numericGrade) {
+	public void addGrade(String studentId, Course course, double firstAttestation, double secondAttestation, double finalExam) {
 		DataBase db = DataBase.getInstance();
 
 		// Проверка: существует ли студент
@@ -147,8 +147,14 @@ public class Teacher extends Employee {
 		}
 
 		// Добавляем оценку в транскрипт через базу данных
-		db.getTranscriptByStudentId(studentId).addGrade(studentId, course, numericGrade);
-		System.out.println("Оценка добавлена в транскрипт: " + studentId + ", Курс: " + course.getCourseName() + ", Оценка: " + numericGrade);
+		db.getTranscriptByStudentId(studentId).addGrade(studentId, course, firstAttestation, secondAttestation, finalExam);
+
+		// Выводим информацию о добавлении
+		System.out.println("Оценка добавлена в транскрипт: " + studentId +
+				", Курс: " + course.getCourseName() +
+				", Первая аттестация: " + firstAttestation +
+				", Вторая аттестация: " + secondAttestation +
+				", Финальный экзамен: " + finalExam);
 	}
 
 

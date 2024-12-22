@@ -1,2 +1,2 @@
-Transcript{entries=[TranscriptEntry{studentId='S001', courseId='CS101', courseName='Введение в программирование', numericGrade=50.0, letterGrade='F', courseCredits=3}], totalGPA=50.0, totalCredits=3}
-Transcript{entries=[TranscriptEntry{studentId='S002', courseId='CS102', courseName='Алгоритмы и структуры данных', numericGrade=78.0, letterGrade='C', courseCredits=4}], totalGPA=78.0, totalCredits=4}
+entities.Transcript@27ddd392
+entities.Transcript@19e1023e

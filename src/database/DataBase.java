@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import common.News;
+import users.Manager;
 
 /**
  * Класс DataBase является синглтоном и служит центральным хранилищем данных для системы университета.
@@ -23,11 +24,10 @@ public class DataBase {
 
 	// Единственный экземпляр DataBase
 	private static volatile DataBase instance = null;
-	
 	private final Vector<News> allNews = new Vector<>();
 	// Хранилища различных типов пользователей и объектов
 	private final List<Teacher> allTeachers;
-	//    private final List<Manager> allManagers;
+	    private final List<Manager> allManagers;
 	private final List<Admin> allAdmins;
 	//    private final List<Dean> allDeans;
 	private final List<Organization> allOrganizations;
@@ -37,11 +37,10 @@ public class DataBase {
 	private List<Course> allCourses = new ArrayList<>();
 	private final Map<String, Transcript> allTranscripts;
 
-	// Приватный конструктор для предотвращения создания экземпляров извне
 	private DataBase() {
 		allStudents = new CopyOnWriteArrayList<>();
 		allTeachers = new CopyOnWriteArrayList<>();
-//        allManagers = new CopyOnWriteArrayList<>();
+        allManagers = new CopyOnWriteArrayList<>();
 		allAdmins = new CopyOnWriteArrayList<>();
 //        allDeans = new CopyOnWriteArrayList<>();
 		allOrganizations = new CopyOnWriteArrayList<>();
@@ -52,11 +51,6 @@ public class DataBase {
 		registrationRequests = new CopyOnWriteArrayList<>();
 	}
 
-	/**
-	 * Метод для получения единственного экземпляра DataBase.
-	 *
-	 * @return экземпляр DataBase.
-	 */
 	public static DataBase getInstance() {
 		if (instance == null) {
 			synchronized (DataBase.class) {
@@ -69,23 +63,10 @@ public class DataBase {
 		return instance;
 	}
 
-	// Методы для работы со студентами
-
-	/**
-	 * Получает все студенты.
-	 *
-	 * @return неизменяемый список всех студентов.
-	 */
 	public List<Student> getAllStudents() {
 		return Collections.unmodifiableList(allStudents);
 	}
 
-	/**
-	 * Добавляет нового студента.
-	 *
-	 * @param student объект Student для добавления.
-	 * @return true, если студент добавлен, иначе false.
-	 */
 	public boolean addStudent(Student student) {
 		if (student == null) {
 			logger.warning("Попытка добавить null студента.");
@@ -101,12 +82,6 @@ public class DataBase {
 		return true;
 	}
 
-	/**
-	 * Удаляет студента по ID.
-	 *
-	 * @param studentId ID студента для удаления.
-	 * @return true, если удаление прошло успешно, иначе false.
-	 */
 	public boolean removeStudent(String studentId) {
 		Student student = findStudentById(studentId);
 		if (student != null) {
@@ -118,12 +93,6 @@ public class DataBase {
 		return false;
 	}
 
-	/**
-	 * Ищет студента по ID.
-	 *
-	 * @param studentId ID студента.
-	 * @return объект Student, если найден, иначе null.
-	 */
 	public Student findStudentById(String studentId) {
 		for (Student s : allStudents) {
 			if (s.getId().equalsIgnoreCase(studentId)) {
@@ -186,11 +155,6 @@ public class DataBase {
 		return true;
 	}
 
-
-
-
-	// Методы для работы с преподавателями
-
 	public List<Teacher> getAllTeachers() {
 		return Collections.unmodifiableList(allTeachers);
 	}
@@ -229,47 +193,44 @@ public class DataBase {
 		return null;
 	}
 
-	// Методы для работы с менеджерами
+    public List<Manager> getAllManagers() {
+        return Collections.unmodifiableList(allManagers);
+    }
 
-//    public List<Manager> getAllManagers() {
-//        return Collections.unmodifiableList(allManagers);
-//    }
+    public boolean addManager(Manager manager) {
+        if (manager == null) {
+            logger.warning("Попытка добавить null менеджера.");
+            return false;
+        }
+        if (allManagers.contains(manager)) {
+            logger.warning("Менеджер с ID " + manager.getId() + " уже существует.");
+            return false;
+        }
+        allManagers.add(manager);
+        logger.info("Менеджер " + manager.getId() + " добавлен в базу данных.");
+        return true;
+    }
 
-//    public boolean addManager(Manager manager) {
-//        if (manager == null) {
-//            logger.warning("Попытка добавить null менеджера.");
-//            return false;
-//        }
-//        if (allManagers.contains(manager)) {
-//            logger.warning("Менеджер с ID " + manager.getId() + " уже существует.");
-//            return false;
-//        }
-//        allManagers.add(manager);
-//        logger.info("Менеджер " + manager.getId() + " добавлен в базу данных.");
-//        return true;
-//    }
+    public boolean removeManager(String managerId) {
+        Manager manager = findManagerById(managerId);
+        if (manager != null) {
+            allManagers.remove(manager);
+            logger.info("Менеджер " + managerId + " удален из базы данных.");
+            return true;
+        }
+        logger.warning("Менеджер " + managerId + " не найден.");
+        return false;
+    }
 
-//    public boolean removeManager(String managerId) {
-//        Manager manager = findManagerById(managerId);
-//        if (manager != null) {
-//            allManagers.remove(manager);
-//            logger.info("Менеджер " + managerId + " удален из базы данных.");
-//            return true;
-//        }
-//        logger.warning("Менеджер " + managerId + " не найден.");
-//        return false;
-//    }
+    public Manager findManagerById(String managerId) {
+        for (Manager m : allManagers) {
+            if (m.getId().equalsIgnoreCase(managerId)) {
+                return m;
+            }
+        }
+        return null;
+    }
 
-//    public Manager findManagerById(String managerId) {
-//        for (Manager m : allManagers) {
-//            if (m.getId().equalsIgnoreCase(managerId)) {
-//                return m;
-//            }
-//        }
-//        return null;
-//    }
-
-	// Методы для работы с администраторами
 
 	public List<Admin> getAllAdmins() {
 		return Collections.unmodifiableList(allAdmins);
@@ -309,16 +270,9 @@ public class DataBase {
 		return null;
 	}
 
-	// Методы для работы с декораторами исследователей
-
 	public List<ResearcherDecorator> getAllResearchers() {
 		return Collections.unmodifiableList(allResearchers);
 	}
-
-
-
-
-	// Методы для работы с курсами
 
 	public List<Course> getAllCourses() {
 		return Collections.unmodifiableList(allCourses);
@@ -357,48 +311,6 @@ public class DataBase {
 		}
 		return null;
 	}
-
-	// Методы для работы с деканами
-
-//    public List<Dean> getAllDeans() {
-//        return Collections.unmodifiableList(allDeans);
-//    }
-
-//    public boolean addDean(Dean dean) {
-//        if (dean == null) {
-//            logger.warning("Попытка добавить null декана.");
-//            return false;
-//        }
-//        if (allDeans.contains(dean)) {
-//            logger.warning("Декан с ID " + dean.getId() + " уже существует.");
-//            return false;
-//        }
-//        allDeans.add(dean);
-//        logger.info("Декан " + dean.getId() + " добавлен в базу данных.");
-//        return true;
-//    }
-
-//    public boolean removeDean(String deanId) {
-//        Dean dean = findDeanById(deanId);
-//        if (dean != null) {
-//            allDeans.remove(dean);
-//            logger.info("Декан " + deanId + " удален из базы данных.");
-//            return true;
-//        }
-//        logger.warning("Декан " + deanId + " не найден.");
-//        return false;
-//    }
-//
-//    public Dean findDeanById(String deanId) {
-//        for (Dean d : allDeans) {
-//            if (d.getId().equalsIgnoreCase(deanId)) {
-//                return d;
-//            }
-//        }
-//        return null;
-//    }
-
-	// Методы для работы с организациями
 
 	public List<Organization> getAllOrganizations() {
 		return Collections.unmodifiableList(allOrganizations);
@@ -470,17 +382,6 @@ public class DataBase {
 		return null;
 	}
 
-//	// Пример сохранения данных в JSON// не использовать
-//	public void saveDataToJson(String filePath) {
-//		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//		try (FileWriter writer = new FileWriter(filePath)) {
-//			gson.toJson(this, writer);
-//			logger.info("Данные успешно сохранены в JSON файл: " + filePath);
-//		} catch (IOException e) {
-//			logger.severe("Ошибка при сохранении данных в JSON файл: " + e.getMessage());
-//		}
-//	}
-
 	private <T> void saveListToFile(String fileName, List<T> dataList) {
 		try (FileWriter writer = new FileWriter(fileName)) {
 			for (T item : dataList) {
@@ -492,9 +393,6 @@ public class DataBase {
 		}
 	}
 
-	/**
-	 * Сохраняет все списки в отдельные файлы.
-	 */
 	public void saveAllListsToFiles() {
 		saveListToFile("data/students.txt", allStudents);
 		saveListToFile("data/teachers.txt", allTeachers);

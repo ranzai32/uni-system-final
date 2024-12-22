@@ -112,8 +112,8 @@ public class OrganizationTest {
 
         // Добавление оценки студенту
         System.out.println("\nДобавляем оценку студенту Мария Иванова:");
-        teacher1.addGrade(student1.getId(), course1, 50.0);
-        teacher1.addGrade(student2.getId(), course2, 78.0);
+        teacher1.addGrade(student1.getId(), course1, 20,23,40);
+        teacher1.addGrade(student2.getId(), course2, 20, 30, 40);
 
         // Показ транскриптов студентов
         System.out.println("\nТранскрипты студентов:");
