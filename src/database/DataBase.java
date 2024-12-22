@@ -7,9 +7,7 @@ import entities.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +32,7 @@ public class DataBase {
 	private final List<RegistrationRequest> registrationRequests;
 	private List<Student> allStudents = new ArrayList<>();
 	private List<Course> allCourses = new ArrayList<>();
-	private List<Transcript> allTranscripts;
+	private final Map<String, Transcript> allTranscripts;
 
 	// Приватный конструктор для предотвращения создания экземпляров извне
 	private DataBase() {
@@ -46,9 +44,9 @@ public class DataBase {
 		allOrganizations = new CopyOnWriteArrayList<>();
 		allResearchers = new CopyOnWriteArrayList<>();
 		allCourses = new CopyOnWriteArrayList<>();
-		allTranscripts = new CopyOnWriteArrayList<>();
 		logger.setLevel(Level.INFO);
 		registrationRequests = new CopyOnWriteArrayList<>();
+		allTranscripts = new HashMap<>();
 	}
 
 	/**
@@ -95,8 +93,11 @@ public class DataBase {
 			return false;
 		}
 		allStudents.add(student);
+		allTranscripts.put(student.getId(), new Transcript());
 		logger.info("Студент " + student.getId() + " добавлен в базу данных.");
 		return true;
+
+
 	}
 
 	/**
@@ -172,6 +173,8 @@ public class DataBase {
 
 		modifiableCourses.add(course); // Добавляем курс
 		student.setCourses(modifiableCourses); // Устанавливаем новый список
+		System.out.println("Курс " + courseCode + " назначен студенту " + studentId);
+
 		logger.info("Курс " + course.getCourseName() + " назначен студенту " + student.getId());
 		return true;
 	}
@@ -278,6 +281,16 @@ public class DataBase {
 		logger.info("Администратор " + admin.getId() + " добавлен в базу данных.");
 		return true;
 	}
+
+	public Transcript getTranscriptByStudentId(String studentId) {
+		Transcript transcript = allTranscripts.get(studentId);
+		if (transcript == null) {
+			throw new IllegalArgumentException("Транскрипт для студента " + studentId + " не найден.");
+		}
+		return transcript;
+	}
+
+
 
 	public boolean removeAdmin(String adminId) {
 		Admin admin = findAdminById(adminId);
@@ -461,8 +474,11 @@ public class DataBase {
 		saveListToFile("data/admins.txt", allAdmins);
 		saveListToFile("data/researchers.txt", allResearchers);
 		saveListToFile("data/registration_requests.txt", registrationRequests);
-		saveListToFile("data/transcripts.txt", allTranscripts);
+		saveListToFile("data/transcripts.txt", new ArrayList<>(allTranscripts.values()));
 	}
 
+    public Map<String, Transcript> getAllTranscripts() {
+        return allTranscripts;
+    }
 }
 

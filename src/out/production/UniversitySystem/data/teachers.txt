@@ -1,0 +1,1 @@
+Teacher{id='null', имя='null null', возраст=0, статус=Неактивен, исследователь=Нет, hireDate=2010-09-01, type=Tutor, rate=4.5, faculty=FIT, courses=[]}

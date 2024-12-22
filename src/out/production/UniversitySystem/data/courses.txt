@@ -1,1 +1,2 @@
-Course{courseCode='CS101', name='Программирование', credits=5, type=Required, faculty=FIT, lessons=0, maxStudentNumber=50, teachers=0}
+Course{courseCode='CS101', name='Введение в программирование', credits=3, type=Required, faculty=FIT, lessons=0, maxStudentNumber=50, teachers=1}
+Course{courseCode='CS102', name='Алгоритмы и структуры данных', credits=4, type=Required, faculty=FIT, lessons=0, maxStudentNumber=40, teachers=1}

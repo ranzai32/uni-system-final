@@ -58,7 +58,7 @@ public class OrganizationTest {
         db.addStudent(student1);
         db.addStudent(student2);
 
-        // Создание преподавателей
+        // Создание преподавателя
         Teacher teacher1 = new Teacher(
                 "T001",
                 new ArrayList<>(), // Пустой список сообщений
@@ -76,7 +76,7 @@ public class OrganizationTest {
                 Faculty.FIT
         );
 
-        // Добавление преподавателей в DataBase
+        // Добавление преподавателя в DataBase
         db.addTeacher(teacher1);
 
         // Создание курсов
@@ -98,23 +98,31 @@ public class OrganizationTest {
                 40
         );
 
-        Course course3 = new Course(
-                "MATH201",
-                "Дифференциальные уравнения",
-                3,
-                TypeCourse.Required,
-                Faculty.FIT,
-                30
-        );
+        // Назначение преподавателей на курсы
+        course1.addTeacher(teacher1);
+        course2.addTeacher(teacher1);
 
         // Добавление курсов в DataBase
         db.addCourse(course1);
         db.addCourse(course2);
-        db.addCourse(course3);
 
+        // Назначение курсов студентам
+        db.assignCourseToStudent(student1.getId(), course1.getCourseCode());
+        db.assignCourseToStudent(student2.getId(), course2.getCourseCode());
+
+        // Добавление оценки студенту
+        System.out.println("\nДобавляем оценку студенту Мария Иванова:");
+        teacher1.addGrade(student1.getId(), course1, 50.0);
+        teacher1.addGrade(student2.getId(), course2, 78.0);
+
+        // Показ транскриптов студентов
+        System.out.println("\nТранскрипты студентов:");
+        teacher1.getTranscript(student1); // !!!!!
+
+        // Показ исходной функциональности (организации)
         // Создание организации
         Organization org = new Organization("Технологический Клуб", student1);
-        System.out.println("Организация '" + org.getOrgName() + "' создана с главой " + org.getHead().getFirstName() + " " + org.getHead().getLastName());
+        System.out.println("\nОрганизация '" + org.getOrgName() + "' создана с главой " + org.getHead().getFirstName() + " " + org.getHead().getLastName());
         db.addOrganization(org);
 
         // Добавление члена в организацию
@@ -137,19 +145,8 @@ public class OrganizationTest {
         System.out.println("\nИнформация об организации:");
         System.out.println(org);
 
-        // Просмотр транскриптов студентов
-        System.out.println("\nТранскрипты студентов:");
-        managerViewStudentTranscript(student1);
-        managerViewStudentTranscript(student2);
+        db.saveAllListsToFiles();
     }
 
-    private static void managerViewStudentTranscript(Student student) {
-        Transcript transcript = student.getTranscript();
-        if (transcript == null) {
-            System.out.println("Транскрипт студента " + student.getFirstName() + " " + student.getLastName() + " недоступен.");
-        } else {
-            System.out.println("Транскрипт студента " + student.getFirstName() + " " + student.getLastName() + ":");
-            System.out.println(transcript);
-        }
-    }
+
 }

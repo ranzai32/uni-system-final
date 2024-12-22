@@ -1,6 +1,7 @@
 package entities;
 
 import common.*;
+import database.DataBase;
 import enums.*;
 import users.*;
 
@@ -121,6 +122,36 @@ public class Teacher extends Employee {
 		this.faculty = faculty;
 	}
 
+	public void addGrade(String studentId, Course course, double numericGrade) {
+		DataBase db = DataBase.getInstance();
+
+		// Проверка: существует ли студент
+		Student student = db.findStudentById(studentId);
+		if (student == null) {
+			throw new IllegalArgumentException("Student with ID " + studentId + " does not exist.");
+		}
+
+		// Проверка: является ли преподаватель назначенным на курс
+		if (!course.getTeachers().contains(this)) {
+			throw new IllegalArgumentException("Teacher is not assigned to the course: " + course.getCourseCode());
+		}
+
+		// Проверка: назначен ли курс студенту
+		if (!student.getCourses().contains(course)) {
+			throw new IllegalArgumentException("Course " + course.getCourseCode() + " is not assigned to the student: " + studentId);
+		}
+
+		// Проверка: существует ли курс в базе данных
+		if (!db.getAllCourses().contains(course)) {
+			throw new IllegalArgumentException("Course " + course.getCourseCode() + " does not exist in the database.");
+		}
+
+		// Добавляем оценку в транскрипт через базу данных
+		db.getTranscriptByStudentId(studentId).addGrade(studentId, course, numericGrade);
+		System.out.println("Оценка добавлена в транскрипт: " + studentId + ", Курс: " + course.getCourseName() + ", Оценка: " + numericGrade);
+	}
+
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -148,6 +179,22 @@ public class Teacher extends Employee {
 				", faculty=" + faculty +
 				", courses=" + courses +
 				'}';
+	}
+
+	public void getTranscript(Student student) {
+		if (student == null) {
+			System.out.println("Студент не найден.");
+			return;
+		}
+
+		Transcript transcript = student.getTranscript();
+		if (transcript == null) {
+			System.out.println("Транскрипт для студента " + student.getFirstName() + " " + student.getLastName() + " недоступен.");
+			return;
+		}
+
+		System.out.println("Транскрипт студента " + student.getFirstName() + " " + student.getLastName() + ":");
+		transcript.printTranscript();
 	}
 
 	public void viewRate() {
