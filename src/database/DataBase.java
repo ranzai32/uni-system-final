@@ -7,10 +7,7 @@ import entities.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +35,7 @@ public class DataBase {
 	private final List<RegistrationRequest> registrationRequests;
 	private List<Student> allStudents = new ArrayList<>();
 	private List<Course> allCourses = new ArrayList<>();
-	private List<Transcript> allTranscripts;
+	private final Map<String, Transcript> allTranscripts;
 
 	// Приватный конструктор для предотвращения создания экземпляров извне
 	private DataBase() {
@@ -50,7 +47,7 @@ public class DataBase {
 		allOrganizations = new CopyOnWriteArrayList<>();
 		allResearchers = new CopyOnWriteArrayList<>();
 		allCourses = new CopyOnWriteArrayList<>();
-		allTranscripts = new CopyOnWriteArrayList<>();
+		allTranscripts = new HashMap<>();
 		logger.setLevel(Level.INFO);
 		registrationRequests = new CopyOnWriteArrayList<>();
 	}
@@ -99,6 +96,7 @@ public class DataBase {
 			return false;
 		}
 		allStudents.add(student);
+		allTranscripts.put(student.getId(), new Transcript());
 		logger.info("Студент " + student.getId() + " добавлен в базу данных.");
 		return true;
 	}
@@ -133,6 +131,14 @@ public class DataBase {
 			}
 		}
 		return null;
+	}
+
+	public Transcript getTranscriptByStudentId(String studentId) {
+		Transcript transcript = allTranscripts.get(studentId);
+		if (transcript == null) {
+			throw new IllegalArgumentException("Транскрипт для студента " + studentId + " не найден.");
+		}
+		return transcript;
 	}
 
 	public List<RegistrationRequest> getRegistrationRequests() {
