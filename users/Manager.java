@@ -90,11 +90,10 @@ public class Manager extends Employee {
 
             if (totalCredits + course.getCredits() > student.getCreditsForSemester()) {
                 System.out.println("Невозможно одобрить заявку. Превышение лимита кредитов на семестр.");
-                db.getRegistrationRequests().remove(request);
                 return;
             }
 
-            // Добавление курса студенту через базу данных
+            // Используем базу данных для добавления курса студенту
             boolean success = db.assignCourseToStudent(student.getId(), course.getCourseCode());
             if (success) {
                 db.getRegistrationRequests().remove(request);
@@ -102,7 +101,6 @@ public class Manager extends Employee {
                 System.out.println("Заявка одобрена: курс добавлен.");
             } else {
                 System.out.println("Не удалось добавить курс. Возможно, курс уже назначен студенту.");
-                db.getRegistrationRequests().remove(request);
             }
         } else {
             db.getRegistrationRequests().remove(request);
@@ -110,7 +108,6 @@ public class Manager extends Employee {
             System.out.println("Заявка отклонена.");
         }
     }
-
 
     /**
      * Добавляет новый курс в систему.

@@ -158,26 +158,25 @@ public class DataBase {
 		Student student = findStudentById(studentId);
 		Course course = findCourseByCode(courseCode);
 
-		if (student == null) {
-			logger.warning("Студент с ID " + studentId + " не найден.");
-			return false;
-		}
-		if (course == null) {
-			logger.warning("Курс с кодом " + courseCode + " не найден.");
+		if (student == null || course == null) {
+			logger.warning("Студент или курс не найдены.");
 			return false;
 		}
 
-		// Проверяем, есть ли уже этот курс у студента
-		if (student.getCourses().contains(course)) {
-			logger.warning("Курс " + courseCode + " уже добавлен студенту " + studentId);
+		// Создаем изменяемую копию списка курсов
+		List<Course> modifiableCourses = new ArrayList<>(student.getCourses());
+		if (modifiableCourses.contains(course)) {
+			logger.warning("Курс уже назначен студенту.");
 			return false;
 		}
 
-		// Добавляем курс студенту
-		student.getCourses().add(course);
-		logger.info("Курс " + courseCode + " добавлен студенту " + studentId);
+		modifiableCourses.add(course); // Добавляем курс
+		student.setCourses(modifiableCourses); // Устанавливаем новый список
+		logger.info("Курс " + course.getCourseName() + " назначен студенту " + student.getId());
 		return true;
 	}
+
+
 
 
 	// Методы для работы с преподавателями

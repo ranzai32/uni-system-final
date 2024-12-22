@@ -68,6 +68,7 @@ public class Student extends User {
 //		this.schedule = null;
 //		this.attestation = null;
 		this.organization = null;
+		this.CreditsForSemester = 30;
 	}
 
 	// Геттеры и сеттеры
@@ -165,7 +166,7 @@ public class Student extends User {
 	}
 
 	public void setCreditsForSemester(int creditsForSemester) {
-		CreditsForSemester = 30;
+		this.CreditsForSemester = creditsForSemester;
 	}
 
 	/**
