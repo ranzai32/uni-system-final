@@ -2,6 +2,9 @@ package entities;
 
 import database.DataBase;
 import users.User;
+import interfaces.ManageNews;
+import enums.*;
+import common.*;
 
 import java.util.HashMap;
 import java.util.Vector;
@@ -10,7 +13,7 @@ import java.util.Vector;
  * Класс Admin отвечает за управление пользователями и логированием в системе.
  * Реализован как синглтон.
  */
-public class Admin extends User {
+public class Admin extends User implements ManageNews{
 
 	private HashMap<String, Vector<String>> requests;
 	private Vector<String> logFiles;
@@ -125,6 +128,28 @@ public class Admin extends User {
 		return user;
 	}
 
+	
+	
+	public void makeNew(String title, String topic, String content, Languages language) {
+		News news = new News(title, topic, content, language, this);
+	}
+	public void deleteNew(News n) {
+		DataBase.getInstance().deleteNew(n);
+	}
+	public void deleteComment(Comment c) {
+		if (c != null){
+			News news = c.getNews();
+				news.removeComment(c);
+				System.out.println("Комментарий удалён.");
+		}
+		else{
+			System.out.println("Комментарий не найден.");
+		}
+	}
+	
+	
+	
+	
 	// Методы для логирования
 
 	/**

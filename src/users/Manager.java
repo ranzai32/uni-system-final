@@ -5,6 +5,7 @@ import common.*;
 import entities.*;
 import enums.*;
 import users.*;
+import interfaces.ManageNews;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
 /**
  * Класс Manager представляет менеджера в системе и расширяет класс Employee.
  */
-public class Manager extends Employee {
+public class Manager extends Employee implements ManageNews {
 
     private TypeManager type;
     private static final Logger logger = Logger.getLogger(Manager.class.getName());
@@ -63,6 +64,27 @@ public class Manager extends Employee {
         }
         this.type = type;
     }
+    
+    
+    
+    public void makeNew(String title, String topic, String content, Languages language) {
+		News news = new News(title, topic, content, language, this);
+	}
+	public void deleteNew(News n) {
+		DataBase.getInstance().deleteNew(n);
+	}
+	public void deleteComment(Comment c) {
+		if (c != null){
+			News news = c.getNews();
+				news.removeComment(c);
+				System.out.println("Комментарий удалён.");
+		}
+		else{
+			System.out.println("Комментарий не найден.");
+		}
+	}
+	
+    
 
     /**
      * Подтверждает или отклоняет заявку студента на курс.

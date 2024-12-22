@@ -7,10 +7,15 @@ import entities.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import common.News;
 
 /**
  * Класс DataBase является синглтоном и служит центральным хранилищем данных для системы университета.
@@ -21,7 +26,8 @@ public class DataBase {
 
 	// Единственный экземпляр DataBase
 	private static volatile DataBase instance = null;
-
+	
+	private final Vector<News> allNews = new Vector<>();
 	// Хранилища различных типов пользователей и объектов
 	private final List<Teacher> allTeachers;
 	//    private final List<Manager> allManagers;
@@ -32,7 +38,7 @@ public class DataBase {
 	private final List<RegistrationRequest> registrationRequests;
 	private List<Student> allStudents = new ArrayList<>();
 	private List<Course> allCourses = new ArrayList<>();
-	private final Map<String, Transcript> allTranscripts;
+	private List<Transcript> allTranscripts;
 
 	// Приватный конструктор для предотвращения создания экземпляров извне
 	private DataBase() {
@@ -44,9 +50,9 @@ public class DataBase {
 		allOrganizations = new CopyOnWriteArrayList<>();
 		allResearchers = new CopyOnWriteArrayList<>();
 		allCourses = new CopyOnWriteArrayList<>();
+		allTranscripts = new CopyOnWriteArrayList<>();
 		logger.setLevel(Level.INFO);
 		registrationRequests = new CopyOnWriteArrayList<>();
-		allTranscripts = new HashMap<>();
 	}
 
 	/**
@@ -93,11 +99,8 @@ public class DataBase {
 			return false;
 		}
 		allStudents.add(student);
-		allTranscripts.put(student.getId(), new Transcript());
 		logger.info("Студент " + student.getId() + " добавлен в базу данных.");
 		return true;
-
-
 	}
 
 	/**
@@ -173,8 +176,6 @@ public class DataBase {
 
 		modifiableCourses.add(course); // Добавляем курс
 		student.setCourses(modifiableCourses); // Устанавливаем новый список
-		System.out.println("Курс " + courseCode + " назначен студенту " + studentId);
-
 		logger.info("Курс " + course.getCourseName() + " назначен студенту " + student.getId());
 		return true;
 	}
@@ -281,16 +282,6 @@ public class DataBase {
 		logger.info("Администратор " + admin.getId() + " добавлен в базу данных.");
 		return true;
 	}
-
-	public Transcript getTranscriptByStudentId(String studentId) {
-		Transcript transcript = allTranscripts.get(studentId);
-		if (transcript == null) {
-			throw new IllegalArgumentException("Транскрипт для студента " + studentId + " не найден.");
-		}
-		return transcript;
-	}
-
-
 
 	public boolean removeAdmin(String adminId) {
 		Admin admin = findAdminById(adminId);
@@ -406,6 +397,38 @@ public class DataBase {
 	public List<Organization> getAllOrganizations() {
 		return Collections.unmodifiableList(allOrganizations);
 	}
+	
+	
+	
+	public boolean addNews(News news) {
+	    if (news == null) {
+	        logger.warning("Попытка добавить null новость.");
+	        return false;
+	    }
+	    allNews.add(news);
+	    logger.info("Новость добавлена: " + news.getTitle());
+	    return true;
+	}
+	
+	
+	public boolean deleteNew(News n) {
+	    if (n == null) {
+	        logger.warning("Попытка удалить null новость.");
+	        return false;
+	    }
+	    if (allNews.contains(n)) {
+	        allNews.remove(n);
+	        logger.info("Новость удалена: " + n.getTitle());
+	        return true;
+	    } else {
+	        logger.warning("Новость не найдена: " + n.getTitle());
+	        return false;
+	    }
+	}
+	
+	public Vector<News> getAllNews(){
+		return allNews;
+	}
 
 	public boolean addOrganization(Organization organization) {
 		if (organization == null) {
@@ -467,18 +490,15 @@ public class DataBase {
 	 * Сохраняет все списки в отдельные файлы.
 	 */
 	public void saveAllListsToFiles() {
-		saveListToFile("data/students.txt", allStudents);
-		saveListToFile("data/teachers.txt", allTeachers);
-		saveListToFile("data/courses.txt", allCourses);
-		saveListToFile("data/organizations.txt", allOrganizations);
-		saveListToFile("data/admins.txt", allAdmins);
-		saveListToFile("data/researchers.txt", allResearchers);
-		saveListToFile("data/registration_requests.txt", registrationRequests);
-		saveListToFile("data/transcripts.txt", new ArrayList<>(allTranscripts.values()));
+		saveListToFile("students.txt", allStudents);
+		saveListToFile("teachers.txt", allTeachers);
+		saveListToFile("courses.txt", allCourses);
+		saveListToFile("organizations.txt", allOrganizations);
+		saveListToFile("admins.txt", allAdmins);
+		saveListToFile("researchers.txt", allResearchers);
+		saveListToFile("registration_requests.txt", registrationRequests);
+		saveListToFile("transcripts.txt", allTranscripts);
 	}
 
-    public Map<String, Transcript> getAllTranscripts() {
-        return allTranscripts;
-    }
 }
 
