@@ -36,6 +36,7 @@ public abstract class User {
 		this.messages = new Vector<>();
 		this.orders = new Vector<>();
 	}
+	
 
 	public User(String id, List<Message> messages, boolean isResearcher, boolean status, int age, String lastName, String firstName, String password, List<Order> orders) {
 	}
@@ -50,6 +51,10 @@ public abstract class User {
 		if(id != null && !id.isEmpty()) {
 			this.id = id;
 		}
+	}
+	
+	public String getFullName() {
+		return firstName + " " + lastName;
 	}
 
 	public String getPassword() {
@@ -104,8 +109,8 @@ public abstract class User {
 		return isResearcher;
 	}
 
-	public void setResearcher(boolean researcher) {
-		isResearcher = researcher;
+	public void setResearcher(boolean b) {
+		isResearcher = b;
 	}
 
 	public Vector<Message> getMessages() {

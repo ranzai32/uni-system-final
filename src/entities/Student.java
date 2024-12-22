@@ -1,10 +1,8 @@
 package entities;
 
-import common.Complaint;
-import enums.Degree;
-import enums.Faculty;
-import common.Lesson;
-import users.User;
+import common.*;
+import enums.*;
+import users.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,6 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import static database.DataBase.logger;
 
 /**
  * Класс Student представляет студента в системе.
@@ -29,7 +29,7 @@ public class Student extends User {
 //	private Schedule schedule;
 //	private Attestation attestation;
 	private Organization organization; // Связь с организацией
-
+    private int CreditsForSemester;
 	/**
 	 * Конструктор класса Student.
 	 *
@@ -66,6 +66,7 @@ public class Student extends User {
 //		this.schedule = null;
 //		this.attestation = null;
 		this.organization = null;
+		this.CreditsForSemester = 30;
 	}
 
 	// Геттеры и сеттеры
@@ -158,6 +159,14 @@ public class Student extends User {
 		this.graduationDate = graduationDate;
 	}
 
+	public int getCreditsForSemester() {
+		return CreditsForSemester;
+	}
+
+	public void setCreditsForSemester(int creditsForSemester) {
+		this.CreditsForSemester = creditsForSemester;
+	}
+
 	/**
 	 * Получает неизменяемый список уроков студента.
 	 *
@@ -235,26 +244,6 @@ public class Student extends User {
 		this.organization = organization;
 	}
 
-	// Методы для управления курсами
-
-	/**
-	 * Добавляет курс студенту.
-	 *
-	 * @param course Курс для добавления.
-	 * @return true, если курс успешно добавлен, иначе false.
-	 */
-	public boolean addCourse(Course course) {
-		if (course == null) {
-			throw new IllegalArgumentException("Курс не может быть null.");
-		}
-		if (courses.contains(course)) {
-			return false; // Курс уже назначен
-		}
-		courses.add(course);
-		Admin.getInstance().addLog("Студент " + this.getId() + " добавил курс: " + course.getCourseName());
-		return true;
-	}
-
 	/**
 	 * Удаляет курс у студента по коду курса.
 	 *
@@ -308,4 +297,3 @@ public class Student extends User {
 				'}';
 	}
 }
-

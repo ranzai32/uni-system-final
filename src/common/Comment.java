@@ -1,8 +1,8 @@
 package common;
 
 import users.User;
-
 import java.util.Objects;
+import java.time.LocalDateTime;
 
 public class Comment {
 
@@ -18,7 +18,7 @@ public class Comment {
 		this.user = user;
 		this.content = content;
 		this.news = news;
-		this.date = date;
+		this.date = LocalDateTime.now();
 	}
 
 	public User getUser() {
@@ -47,10 +47,6 @@ public class Comment {
 
 	public LocalDateTime getDate() {
 		return date;
-	}
-
-	public void setDate(LocalDateTime date) {
-		this.date = date;
 	}
 
 	@Override

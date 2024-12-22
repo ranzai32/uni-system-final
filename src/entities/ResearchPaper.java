@@ -1,11 +1,12 @@
 package entities;
 
-import java.util.Date;
+import java.util.*;
+import enums.*;
 import decorators.ResearcherDecorator;
 
 import java.util.Objects;
 
-public class ResearchPaper extends ResearcherDecorator {
+public class ResearchPaper {
 
 	private String title;
 
@@ -15,11 +16,11 @@ public class ResearchPaper extends ResearcherDecorator {
 
 	private int citations;
 
-	private ResearcherDecorator researcher;
+	private Vector <ResearcherDecorator> researchers;
 
-	public ResearchPaper(String title, ResearcherDecorator researcher, int citations, Date publishedDate, int pages) {
+	public ResearchPaper(String title, int citations, Date publishedDate, int pages) {
 		this.title = title;
-		this.researcher = researcher;
+		this.researchers = new Vector<>();
 		this.citations = citations;
 		this.publishedDate = publishedDate;
 		this.pages = pages;
@@ -30,23 +31,24 @@ public class ResearchPaper extends ResearcherDecorator {
 		if (this == o) return true;
 		if (!(o instanceof ResearchPaper)) return false;
 		ResearchPaper that = (ResearchPaper) o;
-		return getPages() == that.getPages() && getCitations() == that.getCitations() && Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getPublishedDate(), that.getPublishedDate()) && Objects.equals(researcher, that.researcher);
+		return getPages() == that.getPages() && getCitations() == that.getCitations() && Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getPublishedDate(), that.getPublishedDate()) && Objects.equals(researchers, that.researchers);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getTitle(), getPages(), getPublishedDate(), getCitations(), researcher);
+		return Objects.hash(getTitle(), getPages(), getPublishedDate(), getCitations(), researchers);
 	}
 
 	@Override
 	public String toString() {
-		return "ResearchPaper{" +
-				"title='" + title + '\'' +
-				", pages=" + pages +
-				", publishedDate=" + publishedDate +
-				", citations=" + citations +
-				", researcher=" + researcher +
-				'}';
+		String s = "authors={";
+		for(int i = 0; i < researchers.size(); i++) {
+			s += researchers.get(i).getUser().getFullName();
+			if(i != researchers.size() - 1) s += ", ";
+		}
+		s += "}\ntitle={" + getTitle() + "}\n";
+		s += "date={" + publishedDate +"}\npages={" + pages + "}\ncitations={" + citations + "}\n";
+		return s;
 	}
 
 	public String getTitle() {
@@ -69,8 +71,36 @@ public class ResearchPaper extends ResearcherDecorator {
 		return citations;
 	}
 
-//	public String getCitation(TypeFormat f) {
-//		return null;
-//	}
+	public void addMember(ResearcherDecorator r) {
+		researchers.add(r);
+	}
+	public String getCitation(TypeFormat f) {
+		if(f == TypeFormat.BibTex) {
+			String s = "authors={";
+			for(int i = 0; i < researchers.size(); i++) {
+				s += researchers.get(i).getUser().getFullName();
+				if(i != researchers.size() - 1) s += ", ";
+			}
+			s += "}\ntitle={" + getTitle() + "}\n";
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(publishedDate);
+			int year = calendar.get(Calendar.YEAR);
+			s += "year={" + year +"}\npages={" + pages + "}\n";
+			return s;
+		}
+		else {
+			String s = "authors={";
+			for(int i = 0; i < researchers.size(); i++) {
+				s += researchers.get(i).getUser().getFullName();
+				if(i != researchers.size() - 1) s += ", ";
+			}
+			s += "} title={" + getTitle() + "} ";
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(publishedDate);
+			int year = calendar.get(Calendar.YEAR);
+			s += "year={" + year +"} pages={" + pages + "}";
+			return s;
+		}
+	}
 
 }

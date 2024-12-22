@@ -1,7 +1,7 @@
 package entities;
 
 import users.User;
-
+import decorators.*;
 import java.util.Objects;
 import java.util.Vector;
 
@@ -11,9 +11,9 @@ public class ResearchProject {
 
 	private Vector<ResearchPaper> publishedPapers;
 
-	private Vector<User> projectMembers;
+	private Vector<ResearcherDecorator> projectMembers;
 
-	public ResearchProject(String topic, Vector<User> projectMembers, Vector<ResearchPaper> publishedPapers) {
+	public ResearchProject(String topic, Vector<ResearcherDecorator> projectMembers, Vector<ResearchPaper> publishedPapers) {
 		this.topic = topic;
 		this.projectMembers = projectMembers;
 		this.publishedPapers = publishedPapers;
@@ -23,15 +23,19 @@ public class ResearchProject {
 		return topic;
 	}
 
+	public void addMember(ResearcherDecorator r) {
+		projectMembers.add(r);
+	}
+	
 	public void setTopic(String topic) {
 		this.topic = topic;
 	}
 
-	public Vector<User> getProjectMembers() {
+	public Vector<ResearcherDecorator> getProjectMembers() {
 		return projectMembers;
 	}
 
-	public void setProjectMembers(Vector<User> projectMembers) {
+	public void setProjectMembers(Vector<ResearcherDecorator> projectMembers) {
 		this.projectMembers = projectMembers;
 	}
 

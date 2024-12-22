@@ -1,7 +1,12 @@
 package services;
-import database.DataBase;
+
+import database.*;
+import enums.Degree;
+import enums.Faculty;
 import entities.*;
-import enums.*;
+import enums.TypeCourse;
+import enums.TypeTeacher;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +61,7 @@ public class OrganizationTest {
         // Создание преподавателей
         Teacher teacher1 = new Teacher(
                 "T001",
-                null,
+                new ArrayList<>(), // Пустой список сообщений
                 false, // isResearcher
                 true,  // status (активен)
                 45,    // age
@@ -64,10 +69,10 @@ public class OrganizationTest {
                 "Иван",
                 "teachPass1",
                 LocalDate.of(2010, 9, 1),
-                null,
+                new ArrayList<>(), // Пустой список заказов
                 TypeTeacher.Tutor,
                 4.5,    // rate
-                null,
+                new HashMap<>(), // Пустое расписание
                 Faculty.FIT
         );
 
@@ -110,6 +115,7 @@ public class OrganizationTest {
         // Создание организации
         Organization org = new Organization("Технологический Клуб", student1);
         System.out.println("Организация '" + org.getOrgName() + "' создана с главой " + org.getHead().getFirstName() + " " + org.getHead().getLastName());
+        db.addOrganization(org);
 
         // Добавление члена в организацию
         boolean addMember = org.addMember(student2);

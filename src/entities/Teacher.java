@@ -1,17 +1,11 @@
 package entities;
 
-import common.Message;
-import common.Order;
-import enums.Faculty;
-import enums.TypeTeacher;
-import common.Lesson;
-import users.Employee;
+import common.*;
+import enums.*;
+import users.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Класс Teacher представляет преподавателя в системе и расширяет класс Employee.
@@ -22,24 +16,10 @@ public class Teacher extends Employee {
 	private double rate;
 	private Map<Lesson, List<Student>> lessons;
 	private Faculty faculty;
+	private List<Course> courses; // Добавлено поле для курсов
 
 	/**
 	 * Конструктор класса Teacher.
-	 *
-	 * @param id        Уникальный идентификатор преподавателя.
-	 * @param messages  Список сообщений, связанных с преподавателем.
-	 * @param isResearcher Является ли преподаватель исследователем.
-	 * @param status    Статус преподавателя (активен или нет).
-	 * @param age       Возраст преподавателя.
-	 * @param lastName  Фамилия преподавателя.
-	 * @param firstName Имя преподавателя.
-	 * @param password  Пароль преподавателя.
-	 * @param hireDate  Дата найма преподавателя.
-	 * @param orders    Список заказов или заданий, связанных с преподавателем.
-	 * @param type      Тип преподавателя (например, полный рабочий день, частичная занятость).
-	 * @param rate      Рейтинг или ставка преподавателя.
-	 * @param lessons   Расписание уроков, где каждый урок связан с списком студентов.
-	 * @param faculty   Факультет, к которому относится преподаватель.
 	 */
 	public Teacher(String id, List<Message> messages, boolean isResearcher, boolean status, int age, String lastName,
 				   String firstName, String password, LocalDate hireDate, List<Order> orders, TypeTeacher type,
@@ -55,25 +35,52 @@ public class Teacher extends Employee {
 		this.rate = rate;
 		this.lessons = (lessons != null) ? new HashMap<>(lessons) : new HashMap<>();
 		this.faculty = faculty;
+		this.courses = new ArrayList<>(); // Инициализация списка курсов
 	}
 
-	// Геттеры и сеттеры
+	// Методы для управления курсами
 
 	/**
-	 * Получает тип преподавателя.
+	 * Добавляет курс преподавателю.
 	 *
-	 * @return тип преподавателя.
+	 * @param course Курс для добавления.
+	 * @return true, если курс успешно добавлен, иначе false.
 	 */
+	public boolean addCourse(Course course) {
+		if (course == null) {
+			throw new IllegalArgumentException("Курс не может быть null.");
+		}
+		if (courses.contains(course)) {
+			return false; // Курс уже назначен преподавателю
+		}
+		courses.add(course);
+		return true;
+	}
+
+	/**
+	 * Удаляет курс у преподавателя.
+	 *
+	 * @param course Курс для удаления.
+	 * @return true, если курс успешно удален, иначе false.
+	 */
+	public boolean removeCourse(Course course) {
+		return courses.remove(course);
+	}
+
+	/**
+	 * Получает список курсов преподавателя.
+	 *
+	 * @return список курсов.
+	 */
+	public List<Course> getCourses() {
+		return new ArrayList<>(courses); // Возвращаем копию списка для безопасности
+	}
+
+	// Остальные геттеры и сеттеры остаются без изменений
 	public TypeTeacher getType() {
 		return type;
 	}
 
-	/**
-	 * Устанавливает тип преподавателя.
-	 *
-	 * @param type Новый тип преподавателя.
-	 * @throws IllegalArgumentException если тип null.
-	 */
 	public void setType(TypeTeacher type) {
 		if (type == null) {
 			throw new IllegalArgumentException("Тип преподавателя не может быть null.");
@@ -81,20 +88,10 @@ public class Teacher extends Employee {
 		this.type = type;
 	}
 
-	/**
-	 * Получает рейтинг преподавателя.
-	 *
-	 * @return рейтинг преподавателя.
-	 */
 	public double getRate() {
 		return rate;
 	}
 
-	/**
-	 * Устанавливает рейтинг преподавателя.
-	 *
-	 * @param rate Новый рейтинг преподавателя.
-	 */
 	public void setRate(double rate) {
 		if (rate < 0.0 || rate > 5.0) {
 			throw new IllegalArgumentException("Рейтинг должен быть между 0.0 и 5.0.");
@@ -102,21 +99,10 @@ public class Teacher extends Employee {
 		this.rate = rate;
 	}
 
-	/**
-	 * Получает расписание уроков преподавателя.
-	 *
-	 * @return карта уроков и связанных с ними студентов.
-	 */
 	public Map<Lesson, List<Student>> getLessons() {
 		return new HashMap<>(lessons);
 	}
 
-	/**
-	 * Устанавливает расписание уроков преподавателя.
-	 *
-	 * @param lessons Новое расписание уроков.
-	 * @throws IllegalArgumentException если расписание null.
-	 */
 	public void setLessons(Map<Lesson, List<Student>> lessons) {
 		if (lessons == null) {
 			throw new IllegalArgumentException("Расписание уроков не может быть null.");
@@ -124,21 +110,10 @@ public class Teacher extends Employee {
 		this.lessons = new HashMap<>(lessons);
 	}
 
-	/**
-	 * Получает факультет преподавателя.
-	 *
-	 * @return факультет преподавателя.
-	 */
 	public Faculty getFaculty() {
 		return faculty;
 	}
 
-	/**
-	 * Устанавливает факультет преподавателя.
-	 *
-	 * @param faculty Новый факультет преподавателя.
-	 * @throws IllegalArgumentException если факультет null.
-	 */
 	public void setFaculty(Faculty faculty) {
 		if (faculty == null) {
 			throw new IllegalArgumentException("Факультет не может быть null.");
@@ -146,72 +121,6 @@ public class Teacher extends Employee {
 		this.faculty = faculty;
 	}
 
-	/**
-	 * Добавляет урок в расписание преподавателя.
-	 *
-	 * @param lesson   Урок для добавления.
-	 * @param students Список студентов, связанных с уроком.
-	 * @return true, если урок успешно добавлен, иначе false.
-	 */
-//	public boolean addLesson(Lesson lesson, List<Student> students) {
-//		if (lesson == null || students == null) {
-//			throw new IllegalArgumentException("Урок и список студентов не могут быть null.");
-//		}
-//		if (lessons.containsKey(lesson)) {
-//			System.out.println("Урок уже существует в расписании.");
-//			return false;
-//		}
-//		lessons.put(lesson, new ArrayList<>(students));
-//		Admin.getInstance().addLog("Преподаватель " + this.getId() + " добавил урок: " + lesson.getLessonName());
-//		return true;
-//	}
-
-	/**
-	 * Удаляет урок из расписания преподавателя.
-	 *
-	 * @param lesson Урок для удаления.
-	 * @return true, если урок успешно удален, иначе false.
-	 */
-//	public boolean removeLesson(Lesson lesson) {
-//		if (lesson == null) {
-//			throw new IllegalArgumentException("Урок не может быть null.");
-//		}
-//		if (!lessons.containsKey(lesson)) {
-//			System.out.println("Урок не найден в расписании.");
-//			return false;
-//		}
-//		lessons.remove(lesson);
-//		Admin.getInstance().addLog("Преподаватель " + this.getId() + " удалил урок: " + lesson.getLessonName());
-//		return true;
-//	}
-
-	/**
-	 * Просматривает расписание преподавателя.
-	 */
-//	public void viewSchedule() {
-//		if (lessons.isEmpty()) {
-//			System.out.println("Расписание преподавателя " + this.getFirstName() + " " + this.getLastName() + " пусто.");
-//			return;
-//		}
-//		System.out.println("Расписание преподавателя " + this.getFirstName() + " " + this.getLastName() + ":");
-//		for (Map.Entry<Lesson, List<Student>> entry : lessons.entrySet()) {
-//			Lesson lesson = entry.getKey();
-//			List<Student> students = entry.getValue();
-//			System.out.println("- " + lesson.getLessonName() + " (ID: " + lesson.getLessonId() + ")");
-//			System.out.println("  Студенты:");
-//			for (Student student : students) {
-//				System.out.println("    * " + student.getFirstName() + " " + student.getLastName() + " (ID: " + student.getId() + ")");
-//			}
-//		}
-//	}
-
-	/**
-	 * Переопределяет метод equals() для класса Teacher.
-	 * Сравнивает только по уникальному идентификатору.
-	 *
-	 * @param o Объект для сравнения.
-	 * @return true, если объекты равны, иначе false.
-	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -220,21 +129,11 @@ public class Teacher extends Employee {
 		return Objects.equals(this.getId(), teacher.getId());
 	}
 
-	/**
-	 * Переопределяет метод hashCode() для класса Teacher.
-	 *
-	 * @return хэш-код объекта.
-	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.getId());
 	}
 
-	/**
-	 * Переопределяет метод toString() для класса Teacher.
-	 *
-	 * @return строковое представление объекта Teacher.
-	 */
 	@Override
 	public String toString() {
 		return "Teacher{" +
@@ -247,32 +146,11 @@ public class Teacher extends Employee {
 				", type=" + type +
 				", rate=" + rate +
 				", faculty=" + faculty +
-				", lessonsCount=" + lessons.size() +
+				", courses=" + courses +
 				'}';
 	}
 
-	/**
-	 * Метод для управления курсами преподавателя.
-	 * Реализуйте логику управления курсами здесь.
-	 */
-	public void manageCourse() {
-		// Реализуйте логику управления курсами (например, добавление/удаление курсов)
-	}
-
-	/**
-	 * Метод для просмотра рейтинга преподавателя.
-	 */
 	public void viewRate() {
 		System.out.println("Рейтинг преподавателя " + this.getFirstName() + " " + this.getLastName() + ": " + this.rate);
 	}
-
-	@Override
-	public void viewMenu() {
-
-	}
-
-
-	// Дополнительные методы, если необходимо
 }
-
-
