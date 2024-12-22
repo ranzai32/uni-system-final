@@ -1,1 +1,0 @@
-Organization{name='Технологический Клуб', head=Алекс Смирнов, membersCount=2}

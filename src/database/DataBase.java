@@ -496,14 +496,14 @@ public class DataBase {
 	 * Сохраняет все списки в отдельные файлы.
 	 */
 	public void saveAllListsToFiles() {
-		saveListToFile("students.txt", allStudents);
-		saveListToFile("teachers.txt", allTeachers);
-		saveListToFile("courses.txt", allCourses);
-		saveListToFile("organizations.txt", allOrganizations);
-		saveListToFile("admins.txt", allAdmins);
-		saveListToFile("researchers.txt", allResearchers);
-		saveListToFile("registration_requests.txt", registrationRequests);
-		saveListToFile("transcripts.txt", allTranscripts);
+		saveListToFile("data/students.txt", allStudents);
+		saveListToFile("data/teachers.txt", allTeachers);
+		saveListToFile("data/courses.txt", allCourses);
+		saveListToFile("data/organizations.txt", allOrganizations);
+		saveListToFile("data/admins.txt", allAdmins);
+		saveListToFile("data/researchers.txt", allResearchers);
+		saveListToFile("data/registration_requests.txt", registrationRequests);
+		saveListToFile("data/transcripts.txt", new ArrayList<>(allTranscripts.values()));
 	}
 
 }
