@@ -1,9 +1,9 @@
 package UniversitySystem.enums;
 
-public class TypeManager {
+public enum TypeManager {
 
-	public int OR;
+	OR,
 
-	public int DEPARTMENT;
+	DEPARTMENT;
 
 }

@@ -31,7 +31,7 @@ public class Student extends User {
 //	private Schedule schedule;
 //	private Attestation attestation;
 	private Organization organization; // Связь с организацией
-
+    private int CreditsForSemester;
 	/**
 	 * Конструктор класса Student.
 	 *
@@ -158,6 +158,14 @@ public class Student extends User {
 			throw new IllegalArgumentException("Дата выпуска не может быть null.");
 		}
 		this.graduationDate = graduationDate;
+	}
+
+	public int getCreditsForSemester() {
+		return CreditsForSemester;
+	}
+
+	public void setCreditsForSemester(int creditsForSemester) {
+		CreditsForSemester = 30;
 	}
 
 	/**

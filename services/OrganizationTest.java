@@ -115,6 +115,7 @@ public class OrganizationTest {
         // Создание организации
         Organization org = new Organization("Технологический Клуб", student1);
         System.out.println("Организация '" + org.getOrgName() + "' создана с главой " + org.getHead().getFirstName() + " " + org.getHead().getLastName());
+        db.addOrganization(org);
 
         // Добавление члена в организацию
         boolean addMember = org.addMember(student2);

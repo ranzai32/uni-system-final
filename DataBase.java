@@ -25,17 +25,16 @@ public class DataBase {
 	private static volatile DataBase instance = null;
 
 	// Хранилища различных типов пользователей и объектов
-//	private final List<Student> allStudents;
 	private final List<Teacher> allTeachers;
 	//    private final List<Manager> allManagers;
 	private final List<Admin> allAdmins;
 	//    private final List<Dean> allDeans;
 	private final List<Organization> allOrganizations;
 	private final List<ResearcherDecorator> allResearchers;
-//	private final List<Course> allCourses;
-	private final List<RegistrationRequest> registrationRequests = new ArrayList<>();
+	private final List<RegistrationRequest> registrationRequests;
 	private List<Student> allStudents = new ArrayList<>();
 	private List<Course> allCourses = new ArrayList<>();
+	private List<Transcript> allTranscripts;
 
 	// Приватный конструктор для предотвращения создания экземпляров извне
 	private DataBase() {
@@ -47,7 +46,9 @@ public class DataBase {
 		allOrganizations = new CopyOnWriteArrayList<>();
 		allResearchers = new CopyOnWriteArrayList<>();
 		allCourses = new CopyOnWriteArrayList<>();
+		allTranscripts = new CopyOnWriteArrayList<>();
 		logger.setLevel(Level.INFO);
+		registrationRequests = new CopyOnWriteArrayList<>();
 	}
 
 	/**
@@ -130,6 +131,10 @@ public class DataBase {
 		return null;
 	}
 
+	public List<RegistrationRequest> getRegistrationRequests() {
+		return registrationRequests;
+	}
+
 	public boolean submitRegistrationRequest(String studentId, String courseCode) {
 		Student student = findStudentById(studentId);
 		Course course = findCourseByCode(courseCode);
@@ -148,6 +153,32 @@ public class DataBase {
 		logger.info("Заявка на регистрацию студента " + studentId + " на курс " + courseCode + " отправлена.");
 		return true;
 	}
+
+	public boolean assignCourseToStudent(String studentId, String courseCode) {
+		Student student = findStudentById(studentId);
+		Course course = findCourseByCode(courseCode);
+
+		if (student == null) {
+			logger.warning("Студент с ID " + studentId + " не найден.");
+			return false;
+		}
+		if (course == null) {
+			logger.warning("Курс с кодом " + courseCode + " не найден.");
+			return false;
+		}
+
+		// Проверяем, есть ли уже этот курс у студента
+		if (student.getCourses().contains(course)) {
+			logger.warning("Курс " + courseCode + " уже добавлен студенту " + studentId);
+			return false;
+		}
+
+		// Добавляем курс студенту
+		student.getCourses().add(course);
+		logger.info("Курс " + courseCode + " добавлен студенту " + studentId);
+		return true;
+	}
+
 
 	// Методы для работы с преподавателями
 
@@ -398,7 +429,7 @@ public class DataBase {
 		return null;
 	}
 
-//	// Пример сохранения данных в JSON
+//	// Пример сохранения данных в JSON// не использовать
 //	public void saveDataToJson(String filePath) {
 //		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 //		try (FileWriter writer = new FileWriter(filePath)) {
@@ -409,43 +440,31 @@ public class DataBase {
 //		}
 //	}
 
-    public void saveDataToTxt(String filePath) {
-        try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write("Список студентов:\n");
-            for (Student student : allStudents) {
-                writer.write(student.toString() + "\n");
-            }
+	private <T> void saveListToFile(String fileName, List<T> dataList) {
+		try (FileWriter writer = new FileWriter(fileName)) {
+			for (T item : dataList) {
+				writer.write(item.toString() + System.lineSeparator());
+			}
+			logger.info("Данные успешно сохранены в файл: " + fileName);
+		} catch (IOException e) {
+			logger.severe("Ошибка при записи в файл " + fileName + ": " + e.getMessage());
+		}
+	}
 
-            writer.write("\nСписок преподавателей:\n");
-            for (Teacher teacher : allTeachers) {
-                writer.write(teacher.toString() + "\n");
-            }
+	/**
+	 * Сохраняет все списки в отдельные файлы.
+	 */
+	public void saveAllListsToFiles() {
+		saveListToFile("students.txt", allStudents);
+		saveListToFile("teachers.txt", allTeachers);
+		saveListToFile("courses.txt", allCourses);
+		saveListToFile("organizations.txt", allOrganizations);
+		saveListToFile("admins.txt", allAdmins);
+		saveListToFile("researchers.txt", allResearchers);
+		saveListToFile("registration_requests.txt", registrationRequests);
+		saveListToFile("transcripts.txt", allTranscripts);
+	}
 
-            writer.write("\nСписок администраторов:\n");
-            for (Admin admin : allAdmins) {
-                writer.write(admin.toString() + "\n");
-            }
-
-            writer.write("\nСписок организаций:\n");
-            for (Organization organization : allOrganizations) {
-                writer.write(organization.toString() + "\n");
-            }
-
-            writer.write("\nСписок курсов:\n");
-            for (Course course : allCourses) {
-                writer.write(course.toString() + "\n");
-            }
-
-            writer.write("\nСписок исследователей:\n");
-            for (ResearcherDecorator researcher : allResearchers) {
-                writer.write(researcher.toString() + "\n");
-            }
-
-            logger.info("Данные успешно сохранены в текстовый файл: " + filePath);
-        } catch (IOException e) {
-            logger.severe("Ошибка при записи данных в текстовый файл: " + e.getMessage());
-        }
-    }
 }
 
 
