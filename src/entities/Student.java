@@ -29,8 +29,6 @@ public class Student extends User {
 	private LocalDate graduationDate;
 	private List<Lesson> lessons;
 	private Map<String, Complaint> complaints;
-//	private Schedule schedule;
-//	private Attestation attestation;
 	private Organization organization; // Связь с организацией
     private int CreditsForSemester;
 	/**
@@ -66,8 +64,6 @@ public class Student extends User {
 		this.graduationDate = graduationDate;
 		this.lessons = new ArrayList<>(lessons);
 		this.complaints = complaints;
-//		this.schedule = null;
-//		this.attestation = null;
 		this.organization = null;
 		this.CreditsForSemester = 30;
 	}
@@ -184,21 +180,10 @@ public class Student extends User {
 		this.CreditsForSemester = creditsForSemester;
 	}
 
-	/**
-	 * Получает неизменяемый список уроков студента.
-	 *
-	 * @return список уроков.
-	 */
 	public List<Lesson> getLessons() {
 		return Collections.unmodifiableList(lessons);
 	}
 
-	/**
-	 * Устанавливает список уроков студента.
-	 *
-	 * @param lessons Список уроков.
-	 * @throws IllegalArgumentException если список уроков null.
-	 */
 	public void setLessons(List<Lesson> lessons) {
 		if (lessons == null) {
 			throw new IllegalArgumentException("Список уроков не может быть null.");
@@ -206,49 +191,16 @@ public class Student extends User {
 		this.lessons = new ArrayList<>(lessons);
 	}
 
-	/**
-	 * Получает карту жалоб студента.
-	 *
-	 * @return карта жалоб.
-	 */
 	public Map<String, Complaint> getComplaints() {
 		return Collections.unmodifiableMap(complaints);
 	}
 
-	/**
-	 * Устанавливает карту жалоб студента.
-	 *
-	 * @param complaints Карта жалоб.
-	 * @throws IllegalArgumentException если карта жалоб null.
-	 */
 	public void setComplaints(Map<String, Complaint> complaints) {
 		if (complaints == null) {
 			throw new IllegalArgumentException("Список жалоб не может быть null.");
 		}
 		this.complaints = complaints;
 	}
-
-//	public Schedule getSchedule() {
-//		return schedule;
-//	}
-//
-//	public void setSchedule(Schedule schedule) {
-//		if (schedule == null) {
-//			throw new IllegalArgumentException("Расписание не может быть null.");
-//		}
-//		this.schedule = schedule;
-//	}
-
-//	public Attestation getAttestation() {
-//		return attestation;
-//	}
-//
-//	public void setAttestation(Attestation attestation) {
-//		if (attestation == null) {
-//			throw new IllegalArgumentException("Аттестация не может быть null.");
-//		}
-//		this.attestation = attestation;
-//	}
 
 	public Organization getOrganization() {
 		return organization;
@@ -261,12 +213,6 @@ public class Student extends User {
 		this.organization = organization;
 	}
 
-	/**
-	 * Удаляет курс у студента по коду курса.
-	 *
-	 * @param courseCode Код курса для удаления.
-	 * @return true, если курс успешно удален, иначе false.
-	 */
 	public boolean removeCourse(String courseCode) {
 		if (courseCode == null || courseCode.isEmpty()) {
 			throw new IllegalArgumentException("Код курса не может быть пустым.");
@@ -278,10 +224,8 @@ public class Student extends User {
 				return true;
 			}
 		}
-		return false; // Курс не найден
+		return false;
 	}
-
-	// Переопределение методов equals, hashCode и toString
 
 	@Override
 	public boolean equals(Object o) {

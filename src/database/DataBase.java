@@ -133,6 +133,21 @@ public class DataBase {
 		return true;
 	}
 
+	public void removeNews(News news) {
+		if (news == null) {
+			System.out.println("Новость не может быть null.");
+			return;
+		}
+
+		List<News> newsList = getAllNews(); // Assuming you have a method to get all news
+		if (newsList.contains(news)) {
+			newsList.remove(news);
+			System.out.println("Новость успешно удалена: " + news.getTitle());
+		} else {
+			System.out.println("Новость не найдена.");
+		}
+	}
+
 	public boolean assignCourseToStudent(String studentId, String courseCode) {
 		Student student = findStudentById(studentId);
 		Course course = findCourseByCode(courseCode);
@@ -186,14 +201,14 @@ public class DataBase {
 
 	public Teacher findTeacherById(String teacherId) {
 		for (Teacher t : allTeachers) {
-			if (t.getId().equalsIgnoreCase(teacherId)) {
+			if (t != null && t.getId() != null && t.getId().equalsIgnoreCase(teacherId)) {
 				return t;
 			}
 		}
 		return null;
 	}
 
-    public List<Manager> getAllManagers() {
+	public List<Manager> getAllManagers() {
         return Collections.unmodifiableList(allManagers);
     }
 

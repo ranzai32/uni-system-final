@@ -13,30 +13,28 @@ import java.util.*;
  */
 public class Teacher extends Employee {
 
+	private String id;
 	private TypeTeacher type;
 	private double rate;
 	private Map<Lesson, List<Student>> lessons;
 	private Faculty faculty;
-	private List<Course> courses; // Добавлено поле для курсов
+	private List<Course> courses; // Поле для курсов преподавателя
 
 	/**
 	 * Конструктор класса Teacher.
 	 */
-	public Teacher(String id, List<Message> messages, boolean isResearcher, boolean status, int age, String lastName,
-				   String firstName, String password, LocalDate hireDate, List<Order> orders, TypeTeacher type,
-				   double rate, Map<Lesson, List<Student>> lessons, Faculty faculty) {
+	public Teacher(String id, List<Message> messages, boolean isResearcher, boolean status, int age,
+				   String firstName, String lastName, String password, LocalDate hireDate, List<Order> orders,
+				   TypeTeacher type, double rate, Map<Lesson, List<Student>> lessons, Faculty faculty) {
 		super(id, messages, isResearcher, status, age, lastName, firstName, password, hireDate, orders);
-		if (type == null) {
-			throw new IllegalArgumentException("Тип преподавателя не может быть null.");
-		}
-		if (faculty == null) {
-			throw new IllegalArgumentException("Факультет не может быть null.");
-		}
+
+		this.id = id;
 		this.type = type;
 		this.rate = rate;
-		this.lessons = (lessons != null) ? new HashMap<>(lessons) : new HashMap<>();
+		this.lessons = lessons == null ? new HashMap<>() : new HashMap<>(lessons);
 		this.faculty = faculty;
-		this.courses = new ArrayList<>(); // Инициализация списка курсов
+		this.courses = new ArrayList<>();
+		System.out.println("DEBUG: Teacher ID = " + id);
 	}
 
 	// Методы для управления курсами
@@ -77,7 +75,68 @@ public class Teacher extends Employee {
 		return new ArrayList<>(courses); // Возвращаем копию списка для безопасности
 	}
 
-	// Остальные геттеры и сеттеры остаются без изменений
+	// Методы для работы с оценками и транскриптами
+	public void addGrade(String studentId, Course course, double firstAttestation, double secondAttestation, double finalExam) {
+		DataBase db = DataBase.getInstance();
+
+		// Проверка: существует ли студент
+		Student student = db.findStudentById(studentId);
+		if (student == null) {
+			throw new IllegalArgumentException("Студент с ID " + studentId + " не существует.");
+		}
+
+		// Проверка: является ли преподаватель назначенным на курс
+		if (!course.getTeachers().contains(this)) {
+			throw new IllegalArgumentException("Преподаватель не назначен на курс: " + course.getCourseCode());
+		}
+
+		// Проверка: назначен ли курс студенту
+		if (!student.getCourses().contains(course)) {
+			throw new IllegalArgumentException("Курс " + course.getCourseCode() + " не назначен студенту: " + studentId);
+		}
+
+		// Проверка: существует ли курс в базе данных
+		if (!db.getAllCourses().contains(course)) {
+			throw new IllegalArgumentException("Курс " + course.getCourseCode() + " не существует в базе данных.");
+		}
+
+		// Добавляем оценку в транскрипт через базу данных
+		student.getTranscript().addGrade(studentId, course, firstAttestation, secondAttestation, finalExam);
+
+		// Выводим информацию о добавлении
+		System.out.println("Оценка добавлена в транскрипт: " + studentId +
+				", Курс: " + course.getCourseName() +
+				", Первая аттестация: " + firstAttestation +
+				", Вторая аттестация: " + secondAttestation +
+				", Финальный экзамен: " + finalExam);
+	}
+
+	public void getTranscript(Student student) {
+		if (student == null) {
+			System.out.println("Студент не найден.");
+			return;
+		}
+
+		Transcript transcript = student.getTranscript();
+		if (transcript == null) {
+			System.out.println("Транскрипт для студента " + student.getFirstName() + " " + student.getLastName() + " недоступен.");
+			return;
+		}
+
+		System.out.println("Транскрипт студента " + student.getFirstName() + " " + student.getLastName() + ":");
+		transcript.printTranscript();
+	}
+
+	public void viewRate() {
+		System.out.println("Рейтинг преподавателя " + this.getFirstName() + " " + this.getLastName() + ": " + this.rate);
+	}
+
+	// Остальные геттеры и сеттеры
+
+	public String getId() {
+		return id;
+	}
+
 	public TypeTeacher getType() {
 		return type;
 	}
@@ -122,42 +181,6 @@ public class Teacher extends Employee {
 		this.faculty = faculty;
 	}
 
-	public void addGrade(String studentId, Course course, double firstAttestation, double secondAttestation, double finalExam) {
-		DataBase db = DataBase.getInstance();
-
-		// Проверка: существует ли студент
-		Student student = db.findStudentById(studentId);
-		if (student == null) {
-			throw new IllegalArgumentException("Student with ID " + studentId + " does not exist.");
-		}
-
-		// Проверка: является ли преподаватель назначенным на курс
-		if (!course.getTeachers().contains(this)) {
-			throw new IllegalArgumentException("Teacher is not assigned to the course: " + course.getCourseCode());
-		}
-
-		// Проверка: назначен ли курс студенту
-		if (!student.getCourses().contains(course)) {
-			throw new IllegalArgumentException("Course " + course.getCourseCode() + " is not assigned to the student: " + studentId);
-		}
-
-		// Проверка: существует ли курс в базе данных
-		if (!db.getAllCourses().contains(course)) {
-			throw new IllegalArgumentException("Course " + course.getCourseCode() + " does not exist in the database.");
-		}
-
-		// Добавляем оценку в транскрипт через базу данных
-		db.getTranscriptByStudentId(studentId).addGrade(studentId, course, firstAttestation, secondAttestation, finalExam);
-
-		// Выводим информацию о добавлении
-		System.out.println("Оценка добавлена в транскрипт: " + studentId +
-				", Курс: " + course.getCourseName() +
-				", Первая аттестация: " + firstAttestation +
-				", Вторая аттестация: " + secondAttestation +
-				", Финальный экзамен: " + finalExam);
-	}
-
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -185,25 +208,5 @@ public class Teacher extends Employee {
 				", faculty=" + faculty +
 				", courses=" + courses +
 				'}';
-	}
-
-	public void getTranscript(Student student) {
-		if (student == null) {
-			System.out.println("Студент не найден.");
-			return;
-		}
-
-		Transcript transcript = student.getTranscript();
-		if (transcript == null) {
-			System.out.println("Транскрипт для студента " + student.getFirstName() + " " + student.getLastName() + " недоступен.");
-			return;
-		}
-
-		System.out.println("Транскрипт студента " + student.getFirstName() + " " + student.getLastName() + ":");
-		transcript.printTranscript();
-	}
-
-	public void viewRate() {
-		System.out.println("Рейтинг преподавателя " + this.getFirstName() + " " + this.getLastName() + ": " + this.rate);
 	}
 }
